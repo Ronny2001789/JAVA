@@ -1,0 +1,28 @@
+package chapter01.exercise_page_24;
+
+class PoolPuzzleOne {
+    public static void main(String [] args) {
+        int x = 5;
+        while (x < 4) {
+            System.out.print("a ");
+            if (x < 1) {
+                System.out.print("noise");
+            }
+            System.out.print("n");
+            if (x > 1) {
+                System.out.print(" oyster");
+                x = x + 2;
+            }
+            if (x == 1) {
+                System.out.print("noys ");
+            }
+            if (x < 1) {
+                System.out.print("an");
+            }
+            System.out.println();
+            x = x + 1;
+        }
+    }
+}
+
+
