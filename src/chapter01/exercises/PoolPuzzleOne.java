@@ -1,4 +1,4 @@
-package chapter01.exercise_page_24;
+package chapter01.exercises;
 
 class PoolPuzzleOne {
     public static void main(String [] args) {
