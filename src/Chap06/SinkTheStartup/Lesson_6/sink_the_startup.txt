@@ -1,0 +1,130 @@
+GameHelper:
+-----------------------
+public class GameHelper:
+
+This code sets up constants and variables for managing a 7x7 game grid, likely used in a game similar to Battleship. The ALPHABET string represents the row labels (a–g), while GRID_LENGTH and GRID_SIZE define the dimensions of the grid (7x7 = 49 cells). The HORIZONTAL_INCREMENT and VERTICAL_INCREMENT values are used to navigate the grid horizontally (by 1) or vertically (by 7), and the comment suggests that using an enum would be a better way to represent directions. The grid array represents the game board itself, initialized to 49 elements, while random helps place game objects randomly on the grid. The startupCount tracks how many game objects (like ships) have been placed.
+
+-----------------------------------------------------------------------------------
+public String getUserInput(String prompt):
+
+This method prompts the user for input via the console. It displays a message (provided by the prompt parameter), then waits for the user to type a response. The Scanner object reads the user's input from the keyboard, and the method returns the input as a lowercase string. This ensures consistent formatting for comparisons later in the program, regardless of how the user types their answer.
+
+-----------------------------------------------------------------------------------
+public ArrayList<String> placeStartup(int startupSize):
+
+(Lines 23 - 29)
+This method, placeStartup, is responsible for finding a valid location on the game grid to place a "Startup" of a given size. It initializes an array to hold potential grid coordinates, sets a counter to track how many placement attempts have been made, and uses a flag (success) to indicate whether a suitable location has been found. Each time a new Startup is placed, the startupCount is incremented. The method also determines the placement direction (horizontal or vertical) using getIncrement(), which returns the appropriate value (likely 1 for horizontal or GRID_LENGTH for vertical).
+
+(Lines 31 - 41)
+This while loop repeatedly attempts to place a "Startup" game piece on a 7x7 grid by generating random starting positions and testing potential placements. In each iteration (up to a maximum number of attempts), it selects a random starting location and builds a list of candidate coordinates for the piece based on its size and placement direction (horizontal or vertical, determined by an increment value). The loop then checks whether the proposed coordinates fit within the grid boundaries (startupFits) and whether the positions are unoccupied (coordsAvailable). If both conditions are met, the placement is marked as successful, and the loop exits, ensuring that the game piece is legally and safely placed without overlap or boundary violations.
+
+
+(Lines 43 - 48)
+After a valid position for the Startup is found, the method saves the coordinates to the game grid using savePositionToGrid(startupCoords), ensuring those cells are now marked as occupied. It then converts the numeric grid coordinates into a more user-friendly alphanumeric format (like "a3" or "c5") using convertCoordsToAlphaFormat(startupCoords). This converted list, stored in alphaCells, is printed to the console to show where the Startup was placed and then returned from the method, likely for tracking or display purposes elsewhere in the program.
+
+-----------------------------------------------------------------------------------
+private boolean startupFits(int[] startupCoords, int increment):
+
+This method checks if a ship (called a Startup) fits properly on the game board without going off the edges. If the ship is placed horizontally, it makes sure the first and last positions are in the same row so the ship doesn’t wrap around to the next row. If the ship is placed vertically, it checks that the last position is still inside the board’s total size, meaning it doesn’t go past the bottom. If these conditions are met, the ship placement is considered valid and allowed.
+
+-----------------------------------------------------------------------------------
+private boolean coordsAvailable(int[] startupCoords):
+
+This method, called coordsAvailable, checks if all the spots where you want to put your ship are empty. It goes through each position in the list of spots (startupCoords) and looks at the game board (grid) to see if that spot is already taken. If it finds even one spot that is not empty, it stops and says “no, you can’t put the ship here” by returning false. But if all the spots are empty, it says “yes, this place is free” by returning true.
+
+-----------------------------------------------------------------------------------
+private void savePositionToGrid(int[] startupCoords):
+
+This method, savePositionToGrid, marks the spots on the game board where the ship (Startup) has been placed. It goes through each position in the list of coordinates (startupCoords) and sets the corresponding spot in the grid array to 1, which means that spot is now occupied and cannot be used for another ship. This helps keep track of where ships are on the board.
+
+-----------------------------------------------------------------------------------
+private ArrayList<String> convertCoordsToAlphaFormat(int[] startupCoords):
+
+This method, convertCoordsToAlphaFormat, changes the ship’s numeric grid positions into easier-to-read labels like "a0" or "c3". It goes through each number in the list of positions (startupCoords), converts each one into its letter-and-number form using another method (getAlphaCoordsFromIndex), and adds these labels to a list. Finally, it returns the list of these readable coordinates, which are nicer to show to the player.
+
+-----------------------------------------------------------------------------------
+private String getAlphaCoordsFromIndex(int index):
+
+This method, getAlphaCoordsFromIndex, converts a single grid position number into a letter-and-number coordinate like "a3". It first calculates the row by calling calcRowFromIndex, then finds the column by taking the remainder when dividing the index by the grid length (7). It converts the column number into a letter by selecting the matching character from the ALPHABET string. Finally, it combines the letter and row number into a single string and returns it, making the grid positions easier to understand.
+
+-----------------------------------------------------------------------------------
+private int calcRowFromIndex(int index):
+
+This method, calcRowFromIndex, calculates which row a given grid position belongs to by dividing the position’s number (index) by the length of each row (GRID_LENGTH). Since the grid is arranged in rows of equal length, this division tells you the row number of that position on the board.
+
+-----------------------------------------------------------------------------------
+ private int getIncrement():
+
+This method, getIncrement, decides whether to place the next ship (Startup) horizontally or vertically based on how many ships have already been placed. If the number of ships placed so far (startupCount) is even, it returns the value for horizontal movement (HORIZONTAL_INCREMENT), meaning the ship will be placed left to right. If the count is odd, it returns the value for vertical movement (VERTICAL_INCREMENT), meaning the ship will be placed top to bottom. This alternates the placement direction for each new ship.
+
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+Startup:
+--------
+
+public class Startup :
+
+This code defines the start of a class called Startup, which represents a game piece (like a ship). It has two private variables: locationCells, a list that stores the positions of the Startup on the grid using readable coordinates (like "a3"), and name, which holds the name of the Startup. These variables keep track of where the Startup is placed and what it is called.
+
+---------------------------------------------------------------------------------
+public void setLocationCells(ArrayList<String> loc) :
+
+This method, setLocationCells, allows you to assign or update the list of positions (locationCells) where the Startup is located on the grid. It takes an ArrayList of strings as input and sets the locationCells variable to that list, storing the ship’s current coordinates.
+
+---------------------------------------------------------------------------------
+public void setName(String n):
+
+This method, setName, assigns a name to the Startup by taking a string as input and setting the name variable to that value. It lets you give the ship its specific name, like "poniez", "hacqi" , "cabista"
+
+---------------------------------------------------------------------------------
+public String checkYourself(String userInput) :
+
+This method, checkYourself, checks if a user's guess (userInput) hits the Startup (ship). It starts by assuming the guess is a "miss." Then it looks to see if the guessed position is in the ship’s list of locations (locationCells). If the guess matches one of the positions, that spot is removed from the list to mark it as hit. If removing that spot makes the list empty, it means the entire ship is sunk, so the method sets the result to "kill" and prints a message saying the ship was sunk. If there are still spots left, it returns "hit." If the guess doesn’t match any spot, it stays as "miss." Finally, it returns the result to let the game know what happened.
+
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+
+StartupBust:
+-----------
+
+public class StartupBust:
+
+This code creates a new instance of a helper class called GameHelper to assist with game tasks, like getting user input or placing ships. It also initializes an empty list called startups to hold all the Startup (ship) objects in the game. Finally, it sets up a counter numOfGuesses to keep track of how many guesses the player has made during the game.
+
+---------------------------------------------------------------------------------
+private void setUpGame():
+
+(Lines 12 - 20)
+This code creates three new Startup objects, each representing a different ship with its own name: "poniez," "hacqi," and "cabista." After creating and naming each Startup, it adds them to the startups list, which keeps track of all the ships in the game. This prepares the game with three ships ready to be placed and played.
+
+(Lines 22 - 24)
+This code prints instructions to the player, telling them their goal is to sink three Startups named "poniez," "hacqi," and "cabista." It encourages the player to try and sink all of these ships using as few guesses as possible, setting up the challenge and objective for the game.
+
+(Lines 26 - 30)
+This loop goes through each Startup (ship) in the startups list and uses the helper to find a random, valid location of size 3 on the grid for that ship. It then sets the ship’s positions to those new locations by calling setLocationCells, effectively placing all three ships on the board before the game starts.
+
+---------------------------------------------------------------------------------
+private void startPlaying():
+
+This method, startPlaying, runs the main game loop. It keeps asking the player to enter guesses as long as there are still Startups (ships) left to sink. For each guess, it gets the input from the user, checks if the guess hits any ships using checkUserGuess, and continues until all ships are sunk (when startups is empty). Once the game is over, it calls finishGame
+
+---------------------------------------------------------------------------------
+private void checkUserGuess(String userGuess):
+
+This method, checkUserGuess, processes the player’s guess by first increasing the total number of guesses made. It then assumes the guess is a "miss" and checks the guess against each remaining Startup (ship) in the game. For each ship, it calls checkYourself to see if the guess hits or sinks the ship. If it’s a "hit," the method stops checking other ships because the guess was successful. If it’s a "kill," meaning the ship was sunk, it removes that ship from the list and stops checking. Finally, it prints the result ("miss," "hit," or "kill") to inform the player.
+
+---------------------------------------------------------------------------------
+private void finishGame():
+
+This method, finishGame, runs when the player has sunk all the Startups and the game is over. It first prints a message saying all the Startups are destroyed and the player’s stock is worthless. Then, it checks how many guesses the player took: if 18 or fewer, it congratulates the player for finishing quickly; if more than 18, it playfully teases the player for taking too long. This gives feedback on the player's performance at the end of the game.
+
+---------------------------------------------------------------------------------
+public static void main(String[] args):
+
+This is the program’s main entry point where execution begins. It creates a new instance of the StartupBust game, then calls setUpGame() to initialize the game (like placing ships), and finally starts the game loop by calling startPlaying(), allowing the player to begin making guesses. This method essentially kicks off the whole game.
+
+---------------------------------------------------------------------------------
+
