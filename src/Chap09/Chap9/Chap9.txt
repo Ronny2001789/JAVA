@@ -1,0 +1,188 @@
+(237)
+Life and Death of an Object
+
+In Java, you create objects to help your program do things. But when you're done using an object, you need to stop using it so the computer can clean it up and free up memory. You don’t remove it yourself. Java has something called the Garbage Collector that does that for you. In this chapter, you’ll learn how objects are made, where they are stored, and how to manage them so your program runs well. You’ll also learn about important things like memory, constructors (which help create objects), and what happens when an object is no longer needed.
+
+-------------------------------------------------------------------------------------------
+(238)
+The Stack and the Heap: where things live
+
+The Stack and the Heap
+When you run a Java program, the computer uses two main memory areas: the stack and the heap. The stack is where Java keeps track of which methods are running and stores temporary values. The heap is where all your objects live, like a duck or a button. Java cleans up the heap when objects are no longer used, this is done by the Garbage Collector.
+
+Instance and Local Variables
+There are two types of variables in Java: instance variables and local variables. Instance variables are inside a class and belong to objects. They store information about each object. Local variables are created inside methods and only exist while the method is running. When the method finishes, local variables are removed.
+
+-------------------------------------------------------------------------------------------
+(239)
+Methods are stacked
+
+What is a Call Stack?
+When you call a method in Java, it goes onto something called the call stack. The call stack keeps track of which method is running and stores the local variables for each method. The method at the top of the stack is the one currently running. When a method finishes, it is removed (or "popped") from the stack, and Java goes back to the previous method.
+
+Example of Methods on the Stack
+In the example, the method doStuff() is called first and added to the stack. Then it calls go(4), which is added on top of doStuff(). Inside go(), a new variable is created, and then it calls another method called crazy(), which is added to the stack too. 
+
+These are like “inner” methods because one method calls another while it’s still running. Java adds these inner methods to the top of the stack so it can remember where it left off in the previous method and come back to it later. 
+
+When crazy() finishes, it is removed from the stack, and Java continues running go(). When go() finishes, it is removed too, and Java goes back to finish doStuff(). Each method has its own space in the stack to store its local variables so they don’t get mixed up.
+
+
+-------------------------------------------------------------------------------------------
+(240)
+What about local variables that are objects?
+
+A local variable is a reference variable that points to an object. The variable itself is stored in a local area called the stack, but the actual object it points to is stored somewhere else called the heap. So, even if the reference variable is created inside a method (meaning it lives temporarily on the stack), the object it points to always stays in the heap.
+
+-------------------------------------------------------------------------------------------
+(241)
+If local variables live on the stack, where do instance variables live?
+
+If local variables live on the stack, instance variables like x (an int) and y (a long) live on the Heap inside the CellPhone object they belong to. When you create a new CellPhone object using new CellPhone(), Java allocates space on the Heap to store those primitive instance variables. 
+
+For non-primitive instance variables, like the reference variable ant of type Antenna, space for the reference is allocated inside the CellPhone object, but the actual Antenna object is only created on the Heap when you assign it explicitly, for example, with ant = new Antenna().
+
+-------------------------------------------------------------------------------------------
+(244)
+Construct a Duck
+
+A constructor is a special method in a class that is automatically called when an object is created. Its main purpose is to initialize the new object. Unlike regular methods, a constructor does not have a return type—not even void—which is one way it differs from a method. The key feature of a constructor is that it runs before the object is assigned to a reference variable. This gives you a chance to run code that sets up or prepares the object immediately after memory is allocated. In other words, before anyone can use the object, the constructor ensures it’s ready for use.
+
+Code:
+In the example shown, the Duck constructor simply prints "Quack" to the console. This demonstrates that constructor code runs as soon as the object is created. It doesn't matter that we haven't assigned any instance variables yet, the constructor is your entry point to step into the middle of the new process and prepare the object however you'd like.
+
+-------------------------------------------------------------------------------------------
+(245)
+Initializing the state of a new Duck
+
+Constructors usually set initial values for an object’s variables, like the size of a Duck. But if you want the user to decide the size, you have to create the Duck first with new Duck(), and then call setSize() to set the size. This means creating the Duck takes two steps.
+
+-------------------------------------------------------------------------------------------
+(246)
+Using the constructor to initialize important Duck state*
+
+To ensure a new Duck object is fully ready when created, you can add a parameter to its constructor to set important values like size right away. This lets the programmer create and initialize the Duck in a single step with new Duck(42), avoiding the need to call a separate setter method later
+
+-------------------------------------------------------------------------------------------
+(247)
+Make it easy to make a Duck
+
+If a class has only one constructor that requires a size, like the previous example we had, it can be hard for programmers to create an object when they don’t know what size to use. To make it easier, you can create two constructors: one with no arguments that sets a default size, and another that accepts a size parameter. This way, users can either create an object with a default size or specify the size they want. Having multiple constructors like this is called constructor overloading, and it makes your class more flexible and user-friendly.
+
+-------------------------------------------------------------------------------------------
+(248)
+Doesn’t the compiler always make a no-arg constructor for you?
+
+The compiler does not automatically create a no-argument constructor if you write a constructor that takes parameters. A no-argument constructor is a special constructor that doesn’t require you to provide any values when creating an object. If you want your class to have a no-argument constructor in addition to other constructors with parameters, you must write the no-argument constructor yourself.
+
+   // No-argument constructor (no parameters)
+    public Duck() { 
+        size = 10;  // default size
+        System.out.println("Default Duck created with size " + size);
+    }
+
+
+public class UseADuck {
+    public static void main(String[] args) {
+        Duck defaultDuck = new Duck();     // Calls no-argument constructor (no values)
+           }
+}
+-------------------------------------------------------------------------------------------
+(249)
+Overloaded constructors means you have more than one constructor in your class.
+
+Overloaded constructors mean you can have more than one constructor in your class, but each constructor must have a different argument list. This means the number, types, or order of parameters must differ so the compiler can tell them apart. 
+
+For example, in the Mushroom class, there are five constructors with different argument lists: one with an int parameter, one with no parameters, one with a boolean parameter, and two with both a boolean and an int but in different orders. Even if two constructors have parameters of the same types, their order must be different for the code to compile. This allows you to create new objects in different ways depending on what information you have.
+
+-------------------------------------------------------------------------------------------
+(252)
+superclasses and inheritance in constructors
+
+When you create an object, like a Duck, it doesn't just have its own properties; it also includes all the properties from its parent classes, going all the way up to the base Object class. This means the object is made up of layers, each representing a class in its family tree. Even though these parent class properties are hidden, they still occupy space in the object. You can think of creating an object like stacking multiple layers together, where each layer stands for a class in the family tree. Constructors help by setting up the properties of both the Duck class and its parent classes, ensuring the entire object is ready to use.
+
+-------------------------------------------------------------------------------------------
+(253)
+The role of superclass constructors in an object’s life
+
+When you create a new object, all the constructors in its inheritance tree run one by one, starting from the top (the most general class) down to the specific class you are making. For example, if you make a Hippo object, the constructors for Object, Animal, and Hippo all run to build the full object. This is called Constructor Chaining, and it makes sure everything in the object is set up properly. Even classes that you can’t make objects from directly (abstract classes) still run their constructors when needed.
+
+-------------------------------------------------------------------------------------------
+(255)
+How do you invoke a superclass constructor?
+
+In Java, when a class extends another, the constructor of the parent class (called the superclass) must run before the child class (subclass) constructor can finish. You can't call the superclass constructor like a regular method (e.g., Animal()), which is illegal; instead, you must use the special keyword super() inside the child class constructor to invoke the parent's constructor. If you don’t include super() yourself, Java will automatically add it for you—but only if the superclass has a no-argument constructor.
+
+-------------------------------------------------------------------------------------------
+(256)
+Can the child exist before the parents?
+
+In Java, when you create an object from a subclass, the parent class must be built first. This is because the subclass might use things from the parent, like methods or variables. So, Java always runs the parent’s constructor before the child’s constructor. It starts from the top of the inheritance tree and goes down, making sure each part is ready before moving to the next. This why Java uses the special keyword super() to call the parent constructor.
+
+-------------------------------------------------------------------------------------------
+(257)
+Superclass constructors with arguments
+
+When a parent class (like Animal) has a constructor that takes arguments, the child class (like Hippo) must pass the right values to it using super(...). In this example, Animal needs a name, which it stores in a private variable. Hippo inherits a method called getName() from Animal, but since Hippo doesn’t have its own name variable, it has to send the name to the Animal constructor using super(name). That way, the Animal part of the Hippo object stores the name, and the Hippo can still use getName() to return it. This shows how a subclass passes information to the superclass when the superclass doesn't have a no-argument constructor.
+
+-------------------------------------------------------------------------------------------
+(258)
+Invoking one overloaded constructor from another
+
+When multiple constructors (overloaded constructors) do similar tasks with different inputs, it's best to avoid repeating code by having one main constructor that the others call. You can do this using the keyword this(), which lets one constructor call another constructor in the same class. However, there’s an important rule: the call to this() must be the first line inside the constructor. Also, every constructor must either call this() or super() (which calls the parent class's constructor) but not both, only one can be the first statement.
+
+code:
+The code uses the Color class because it deals with setting colors. The Mini class extends Car and has a private Color variable. It has three constructors. The no-argument constructor calls another one using this(Color.RED) to avoid repeating code. The second constructor sets the color and calls super("Mini") to run the parent class's constructor. The third one tries to call both this(Color.RED) and super(size), but this causes an error because in Java, only one of them can be used, and it must be the first line.
+
+You can compile Java classes without a main method using a command like javac superclass.java subclass.java (in this case javac Car.java Mini.java). Compiling translates your code into bytecode and doesn’t require an entry point. However, if you try to run a class without a main method using java ClassName, you’ll get an error since Java needs a main method as the starting point to execute the program. So, compiling works fine without main.
+
+-------------------------------------------------------------------------------------------
+(260)
+Now we know how an object is born, but how long does an object live ?
+
+An object’s life depends on how long its reference variable stays alive. If the reference is still active, the object stays alive in the computer’s memory (called the Heap). But if the reference is gone, the object will be removed. 
+
+Now, what about the variables that refer to these objects? A local variable only lives inside the method where it’s declared. For example, if you declare a variable inside a method, you can only use it there, and it disappears when the method finishes running. 
+
+On the other hand, an instance variable belongs to the object itself and lives as long as the object exists. So even when methods finish, the instance variables remain available as long as the object is alive. This means local variables have a short life tied to the method, while instance variables have a longer life tied to the object.
+
+-------------------------------------------------------------------------------------------
+(261)
+The difference between life and scope for local variables:
+
+When you create a variable inside a method, it only lives while that method is running. This is called the variable’s life. But you can only use the variable while the method is the one running at the top. This is called scope.
+
+Let’s say you have a method called doStuff(), and inside it, you make a variable called b. While doStuff() is running, b is alive and you can use it. But if doStuff() calls another method like go(), the variable b is still alive, but you can’t use it right now because it’s not in scope. When go() finishes, control goes back to doStuff(), and now you can use b again.
+
+-------------------------------------------------------------------------------------------
+(262)
+What about reference variables?
+
+A reference variable lets you use an object, but only while the reference is still active or “in scope.” There are three common ways a reference can be removed: first, when the reference goes out of scope, like when a method finishes; second, when the reference is assigned to a new object; and third, when the reference is explicitly set to null. 
+
+Once a reference is removed by any of these ways, the object it pointed to can no longer be accessed and becomes useless. When this happens, Java’s garbage collector will automatically remove that object from memory to free up space. You do not have to delete objects yourself. This process helps your program run smoothly by cleaning up unused objects.
+
+-------------------------------------------------------------------------------------------
+(263)
+Object-killer #1
+Reference goes out of scope, permanently
+
+When a reference variable goes out of scope permanently, the object it was pointing to becomes unreachable. For example, imagine two methods: foof() and barf(). When foof() is running, no variables exist yet. But when barf() is called inside foof(), it creates a reference variable d that points to a new Duck object on the heap. While barf() is running, the Duck object is alive because the reference d is still in scope. 
+
+However, when barf() finishes, its reference variable d disappears as the method's stack frame is removed. Since there are no references left to the Duck object, it becomes abandoned and is marked for garbage collection. This means Java will eventually remove that unused object to free memory.
+
+-------------------------------------------------------------------------------------------
+(264)
+Object-killer #2
+Assign the reference to another object
+
+Imagine you have a reference variable d that points to a Duck object. This Duck object lives in memory (called the Heap) as long as d refers to it. When you assign d to a new Duck object, the original Duck object is no longer referenced by anything. Because nothing points to it anymore, it becomes "abandoned" and is eligible for garbage collection. This means Java will eventually clean up that unused object from memory.
+
+-------------------------------------------------------------------------------------------
+(265)
+Object-killer #3
+Explicitly set the reference to null
+
+When you create an object and assign it to a reference variable (like d), that object stays alive in memory as long as the reference points to it. But if you set the reference variable to null, you are basically saying that the reference no longer points to any object. This is like having a remote control but no TV to control. The object that was previously referenced becomes abandoned because nothing points to it anymore. Since it’s no longer needed, Java’s garbage collector will eventually clean it up and free the memory.
+
+-------------------------------------------------------------------------------------------
