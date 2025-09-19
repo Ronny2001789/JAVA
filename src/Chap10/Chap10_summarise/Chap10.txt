@@ -1,0 +1,149 @@
+(275)
+Numbers Matter
+
+Working with numbers in Java goes beyond basic math; you can round numbers, find their absolute value, compare them, format them with decimals or commas, and even convert between numbers and Strings. Java has built-in tools (called methods) that make all of this easy. Many of these tools are static, meaning you can use them without creating an object first. So before diving in, it is important to understand what static means, including static final variables, which are constants in Java.
+
+---------------------------------------------------------------------------------
+(276)
+MATH methods: as close as you’ll ever get to a global method
+
+In Java there are two kinds of methods: instance methods, which belong to individual objects and need you to make (using new) an object of the class to call them; and static methods, which belong to the class itself and can be used without making any object. 
+
+For example, Math.abs(-5) is a static method, you don’t need a Math object to call it. You can’t create a new object (new Math()) because the Math class has a private constructor, which blocks creating objects. Static methods are useful when you don’t need any per‑object data (instance variables), they just take inputs (arguments) and possibly use static data, but never rely on something from a specific object.
+---------------------------------------------------------------------------------
+(277)
+The difference between regular (non-static) and static methods
+
+In Java, there are two main types of methods: regular (non-static) methods and static methods. A regular method works with individual objects and can use or change the data (called instance variables) stored inside those objects. For example, if you have a class called Song, each song object can have its own title, and calling the play() method on that song will play the specific song’s title. Each object remembers its own data, so when you call play() on one song, it plays that song, and calling play() on another song plays the other one.
+
+On the other hand, static methods belong to the class itself, not to any individual object. This means static methods don’t use or change instance variables because there’s no object involved. Instead, you call static methods using the class name, like Math.min(42, 36), which finds the smaller number between 42 and 36. Static methods are useful for actions that don’t depend on any particular object but are related to the whole class. Unlike regular methods, static methods do not work with individual objects, so no objects are created or used when calling them.
+
+---------------------------------------------------------------------------------
+(278)
+What it means to have a class with static methods
+
+Static methods belong to the class and are called using the class name, like Math.min(). Non-static methods work with objects and need you to create an object first, then call the method, like t2.play(). Some classes with only static methods don’t need objects at all.
+
+---------------------------------------------------------------------------------
+(279)
+Static methods can’t use non-static (instance) variables!
+
+Static methods can’t use non-static (instance) variables because they don’t know which object the variable belongs to. Static methods run without any specific object, so if you try to use an instance variable like size inside a static method, Java gives an error. It’s like asking, “Whose size?” , the method has no idea which object you’re talking about, because no object was created or passed in.
+
+---------------------------------------------------------------------------------
+(281)
+Static variable:
+
+A static variable is shared by all objects of a class. For example, if you want to count how many Duck objects are created, a normal variable inside each Duck won't work because each Duck has its own copy starting at zero. Instead, you use a static variable like duckCount. This variable belongs to the class itself, not to individual Ducks, so all Ducks share the same duckCount. Every time a new Duck is created, the constructor increases duckCount by 1. This way, duckCount keeps the total number of Ducks made, and all Duck objects see the same number. Meanwhile, each Duck still has its own size variable, which is different for each object.
+
+---------------------------------------------------------------------------------
+(283)
+Initializing a static variable
+
+Static variables are set up (initialized) when the class is first loaded by Java, even before any object of that class is made. For example, if you have a static variable called playerCount in a Player class, it starts with a default value (like 0 for numbers) automatically. You can also set it to a specific value when you write the code, but it’s not required because Java gives default values just like it does for normal variables. When you create new Player objects, the static variable playerCount increases to count how many Players have been created. You can check this static variable anytime by using the class name, like Player.playerCount.
+
+---------------------------------------------------------------------------------
+(284)
+static final variables are constants
+
+In Java, when a variable is marked as final, it means the value cannot be changed once it's been assigned. If a variable is also marked as static, it belongs to the class rather than any specific object, and it gets initialized when the class is loaded. Together, static final variables are constants, and their values stay the same for the entire duration of the program. These constants are often written in all capital letters with underscores to separate words, like PI or X_VALUE, which makes them easy to recognize.
+
+There are two main ways to assign a value to a static final variable: either directly when declaring it, or inside a static initializer block. A static initializer is a special block of code that runs once when the class is loaded—before any method or object is used—so it's a good place to set up constants that need to be calculated, like using Math.random(). However, if you forget to assign a value to a static final variable, the compiler will show an error because such variables must be initialized either at the point of declaration or in a static block.
+
+---------------------------------------------------------------------------------
+(285)
+final isn’t just for static variables...
+
+The final keyword in Java isn’t just for static variables, you can also use it with non-static variables, method parameters, methods, and even classes. When a variable is marked final, whether it’s an instance variable, a local variable, or a method parameter, it means its value cannot be changed after it's been assigned. 
+
+A final method means that no subclass can override it, which helps protect critical behavior in your program. Similarly, a final class cannot be extended, meaning no other class can inherit from it. Overall, final is used to enforce stability and prevent unwanted changes in your code.
+
+---------------------------------------------------------------------------------
+(288)
+Math methods
+
+The Math class in Java has helpful methods like abs() and random(). The abs() method gives you the absolute value of a number, which means it turns a negative number into a positive one. For example, Math.abs(-240) gives 240. The random() method gives you a random number between 0.0 and 1.0 (not including 1.0). You can multiply it to get a number in a different range, like Math.random() * 5.
+
+---------------------------------------------------------------------------------
+(290 291)
+Wrapping a primitive
+
+In earlier versions of Java, developers had to manually convert primitive values like int into their matching wrapper classes (such as Integer) whenever they wanted to use them in collections like ArrayList, which only work with objects. This process, called boxing and unboxing, was time-consuming and often led to mistakes. Luckily, Java now supports autoboxing and unboxing, which means it automatically wraps (boxes) and unwraps (unboxes) primitive values when needed—so you don’t have to do it yourself.
+
+
+When you create an ArrayList<Integer> and add a primitive int to it, Java automatically converts the int into an Integer object behind the scenes. For example, writing list.add(x); where x is an int works fine, Java does the wrapping for you. When retrieving values, like list.get(0);, Java will also automatically unwrap the Integer back into a primitive int, so you can assign it directly to a variable without calling methods like intValue(). This makes it much easier to work with primitive values in collections.
+
+---------------------------------------------------------------------------------
+(292 - 293)
+Autoboxing works almost everywhere
+
+Method Arguments, Return Values, and Boolean Expressions:
+_________________________________________________________
+When a method expects a wrapper type like Integer, you can pass either a wrapper object or a matching primitive value like int. The reverse is also true. If a method expects a primitive type, you can pass either a primitive or a wrapper object. This flexibility also applies to return values. 
+
+If a method declares a primitive return type, it can return either a primitive or a wrapper, and if it declares a wrapper return type, it can return either a wrapper or a primitive. Finally, in any place where a boolean value is expected such as conditions, you can use a primitive boolean, a Boolean wrapper object, or an expression that evaluates to a boolean like 4 > 2. Java automatically handles all these conversions for you.
+
+
+Operations on Numbers and Assignments:
+__________________________________________
+One surprising feature of autoboxing is that you can use wrapper objects in arithmetic operations just like primitives. For example, you can apply the increment operator ++ to an Integer object, such as Integer i = new Integer(42); i++;. Behind the scenes, the compiler converts the wrapper to its primitive value, performs the operation, and converts it back to a wrapper. Similarly, you can mix wrappers and primitives in expressions like Integer k = j + 3;.
+
+You can assign a primitive value to a variable declared as a wrapper type or assign a wrapper object to a variable declared as a primitive. Java’s autoboxing and unboxing features make working with these types much smoother and easier.
+
+---------------------------------------------------------------------------------
+(296 - 297)
+Number formatting
+
+In Java, formatting numbers can help make your code and output easier to read, especially when working with large values. For example, instead of writing a long number like 1000000000, you can use underscores like 1_000_000_000 to make it more readable. In Java, number formatting involves two main parts: the formatting instructions and the argument to be formatted. 
+
+Java also allows you to format numbers with commas using String.format(). For instance, if you want to display one billion with commas, you can use the code String s = String.format("%,d", myBillion);, which will give you the output 1,000,000,000. This makes your printed numbers look cleaner and more professional.
+
+---------------------------------------------------------------------------------
+(298)
+The percent (%) says, “insert argument here” (and format it using these instructions)
+
+In Java, the percent sign % in a format string tells the program to insert and format another value at that spot using specific instructions. The first argument in the format() method is called the format string, which may include normal text and format specifiers. When you see something like "%.2f", it means format the number to two decimal places. 
+
+For example, String.format("I have %.2f bugs to fix.", 476578.09876); will output: "I have 476578.10 bugs to fix.", the number is rounded to two decimal places and inserted into the string. 
+
+You can also include commas by using %,.2f instead, like in String.format("I have %,.2f bugs to fix.", 476578.09876);, which gives: "I have 476,578.10 bugs to fix." This shows how format specifiers not only control where a value appears in the string but also how it’s displayed.
+
+---------------------------------------------------------------------------------
+(300)
+The format specifier
+
+In Java, a format specifier is the part of a format string that starts with a percent sign % and ends with a type indicator like d (for integers) or f (for floating-point numbers), and it controls how the following argument should be displayed. Everything between the % and the type character (and including the type) makes up the formatting instructions. After the type, any characters are treated as regular text unless another % is encountered, which would start a new format specifier. 
+
+A format specifier can include up to five optional parts in this exact order: [argument number][flags][width][.precision]type. For example, in format("%,6.1f", 42.000);, the specifier uses flags (, for comma), width (6 for minimum characters), precision (.1 for one decimal place), and type (f for float). This gives fine control over how numbers are displayed, such as adding commas, padding, or rounding, making your output easier to read and more professional-looking.
+
+---------------------------------------------------------------------------------
+(301)
+The only required specifier is for TYPE
+
+In Java’s String.format() method, the type specifier ( %d for decimal or %f for floating point) is the only required part of a format instruction, and it must always come last if you include any other formatting options (like precision). 
+
+For example, "%.3f" formats a number as a floating-point value with three digits after the decimal. Common type specifiers include %d for integers, %f for floating-point numbers, %x for hexadecimal, and %c for characters. 
+
+Each type specifier only works with certain data types: for instance, %d expects an integer type like int, %f expects a float or double, and %c expects a character or an integer that maps to a character. So while you can add things like precision or padding to your format string, you must always include a type, and it must be at the end of the specifier.
+
+---------------------------------------------------------------------------------
+(302)
+What happens if I have more than one argument?
+
+When you have more than one argument to insert into a formatted string in Java, you simply include multiple format specifiers (like %d or %.2f) in the format string and pass the corresponding values in the same order as the specifiers appear. 
+
+For example, if you want to create a string like "The rank is 20,456,654 out of 100,567,890.24." using variables, you would call String.format() with the format string as the first argument and the variables as the second and third arguments: String.format("The rank is %,d out of %,.2f", one, two);. 
+
+The first format specifier %,d matches the first variable one, and the second specifier %,.2f matches the second variable two. The format string processes arguments in the order they are passed unless you explicitly tell it otherwise, which becomes useful in more advanced formatting like working with dates.
+
+---------------------------------------------------------------------------------
+(303)
+Just one more thing...static imports
+
+Static imports in Java let you use static methods or variables without always typing the class name, which can make your code shorter and sometimes cleaner—for example, using sqrt() instead of Math.sqrt(). 
+
+However, while this can save typing, it can also make your code harder to read because you lose the clear connection to where the method or variable comes from, which can be confusing later or cause naming conflicts if different classes have methods with the same name. 
+
+Because of this, it’s best to use static imports only when the method or variable’s meaning is obvious without the class prefix, and always double-check your code afterward to make sure it’s still clear and understandable.
+
+----------------------------------------------------------------------------------
